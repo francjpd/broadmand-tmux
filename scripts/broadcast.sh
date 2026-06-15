@@ -70,4 +70,4 @@ done
 # Return focus to the originally active pane.
 tmux select-pane -t "$active_id" >/dev/null 2>&1 || true
 
-printf '[done ] sent=%d skipped=%d\n' "$sent" "$skipped"
+printf '[done ] sent=%d skipped=%d\n' "$sent" "$skipped" >&2
