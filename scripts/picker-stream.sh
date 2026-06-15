@@ -19,24 +19,39 @@ ENGINE=$(tmux_opt @broadcast-picker-engine 'fd')
 query="${1:-}"
 root="${BROADCAST_FALLBACK_ROOT:-$HOME}"
 
+FD_CMD=$(find_fd)
+
+__fd_dirs() {
+  local base="$1"
+  if [ -n "$FD_CMD" ]; then
+    "$FD_CMD" --type=d --hidden --follow --exclude .git \
+      --base-directory "$base" . "$base" 2>/dev/null
+  fi
+}
+
 if [ -z "$query" ]; then
   case "$ENGINE" in
     fd)
-      fd --type=d --hidden --follow --exclude .git \
-         --base-directory "$root" . "$root" 2>/dev/null
+      __fd_dirs "$root"
       ;;
-    zoxide|both)
+    zoxide)
       if command -v zoxide >/dev/null 2>&1; then
         zoxide query -l 2>/dev/null
       else
-        fd --type=d --hidden --follow --exclude .git \
-           --base-directory "$root" . "$root" 2>/dev/null
+        __fd_dirs "$root"
       fi
+      ;;
+    both)
+      {
+        if command -v zoxide >/dev/null 2>&1; then
+          zoxide query -l 2>/dev/null
+        fi
+        __fd_dirs "$root"
+      } | awk '!seen[$0]++'
       ;;
   esac
 else
   # Show the typed path as a selectable item, then its subdirs.
   printf '%s\n' "$query"
-  fd --type=d --hidden --follow --exclude .git \
-     --base-directory "$query" . "$query" 2>/dev/null
+  __fd_dirs "$query"
 fi

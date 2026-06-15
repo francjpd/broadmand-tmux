@@ -102,7 +102,7 @@ run-shell '~/.tmux/plugins/broadmand-tmux/broadmand.tmux'
 | `@broadcast-run-key`            | `d`                                              | Prefix key for free-form command broadcast   |
 | `@broadcast-cd-picker-key`      | `D`                                              | Prefix key for picker `cd`                   |
 | `@broadcast-picker-engine`      | `fd`                                             | `fd`, `zoxide`, or `both`                    |
-| `@broadcast-excluded`           | `vim,vi,nvim,less,man,ssh,htop,top,mc,opencode,claude,aider,continue,qwen,qwen-cli,gemini,gemini-cli,openai,ollama,copilot,codeium,anthropic,chatgpt,chatgpt-cli,sgpt,aichat,pplx,perplexity` | Comma-separated commands to skip             |
+| `@broadcast-excluded`           | `vim,vi,nvim,less,man,ssh,htop,top,mc,opencode,claude,aider,continue,qwen,qwen-cli,gemini,gemini-cli,openai,ollama,copilot,codeium,anthropic,chatgpt,chatgpt-cli,sgpt,aichat,pplx,perplexity` | Comma-separated commands to skip; whitespace around entries is allowed |
 | `@broadcast-pane-delay`         | `5`                                              | Milliseconds between `send-keys` ops         |
 
 See [`examples/tmux.conf.snippet`](examples/tmux.conf.snippet) for a

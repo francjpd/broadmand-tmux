@@ -2,19 +2,12 @@
 # scripts/util.sh — shared helpers for broadmand-tmux
 # Source this from sibling scripts. Not executable on its own.
 
-# Resolve plugin install directory from the path of the calling script.
-_broadcast__plugin_dir() {
-  local src="${BASH_SOURCE[1]:-$0}"
-  dirname "$(readlink -f "$src")/.." | xargs -I{} dirname {}
-}
-
 # Print an error to tmux status line and exit non-zero.
 die() {
   local msg="$1"
-  command -v tmux >/dev/null 2>&1 && [ -n "${TMUX:-}" ] && \
+  if command -v tmux >/dev/null 2>&1; then
     tmux display-message "broadmand-tmux: $msg"
-  command -v tmux >/dev/null 2>&1 && [ -z "${TMUX:-}" ] && \
-    tmux display-message "broadmand-tmux: $msg"
+  fi
   printf 'broadmand-tmux: %s\n' "$msg" >&2
   exit 1
 }
@@ -52,18 +45,18 @@ pane_in_mode() {
 }
 
 # Is the pane's command in the excluded list? Echoes yes/no.
+# Entries are comma-separated; surrounding whitespace is trimmed.
 pane_excluded() {
   local pane_id="$1" excluded="$2"
-  local cmd
+  local cmd x
   cmd=$(pane_command "$pane_id")
   [ -z "$cmd" ] && { echo yes; return; }
+
   local IFS=','
-  set -- $excluded
-  for x in "$@"; do
-    if [ "$x" = "$cmd" ]; then
-      echo yes
-      return
-    fi
+  for x in $excluded; do
+    x="${x#${x%%[![:space:]]*}}"   # trim leading whitespace
+    x="${x%${x##*[![:space:]]}}"  # trim trailing whitespace
+    [ "$x" = "$cmd" ] && { echo yes; return; }
   done
   echo no
 }
@@ -79,27 +72,38 @@ shell_quote() {
   printf "'%s'" "$s"
 }
 
+# Return the number of seconds to sleep for the configured pane delay.
+__pane_delay_seconds() {
+  local delay_ms="${PANE_DELAY_MS:-5}"
+  if [[ "$delay_ms" =~ ^[0-9]+$ ]] && [ "$delay_ms" -gt 0 ]; then
+    awk "BEGIN{print $delay_ms/1000}"
+  else
+    printf '0\n'
+  fi
+}
+
 # Send a literal line to a pane, clearing any half-typed input first.
 # Honors PANE_DELAY_MS between operations.
 send_to_pane() {
-  local pane_id="$1" line="$2" delay_ms="${PANE_DELAY_MS:-5}"
+  local pane_id="$1" line="$2"
+  local delay_sec
+  delay_sec=$(__pane_delay_seconds)
+
   tmux send-keys -t "$pane_id" C-u
-  [ "$delay_ms" -gt 0 ] 2>/dev/null && sleep "$(awk "BEGIN{print $delay_ms/1000}")"
+  [ "$delay_sec" != "0" ] && sleep "$delay_sec"
   tmux send-keys -t "$pane_id" -l -- "$line"
-  [ "$delay_ms" -gt 0 ] 2>/dev/null && sleep "$(awk "BEGIN{print $delay_ms/1000}")"
+  [ "$delay_sec" != "0" ] && sleep "$delay_sec"
   tmux send-keys -t "$pane_id" Enter
-  [ "$delay_ms" -gt 0 ] 2>/dev/null && sleep "$(awk "BEGIN{print $delay_ms/1000}")"
+  [ "$delay_sec" != "0" ] && sleep "$delay_sec"
 }
 
-# Resolve ~ and $HOME in a path; ensure absolute; verify it is a directory.
-resolve_dir() {
-  local p="$1"
-  [ -z "$p" ] && return 1
-  p="${p/#\~/$HOME}"
-  case "$p" in
-    /*) ;;
-    *) p="$PWD/$p" ;;
-  esac
-  [ -d "$p" ] || return 2
-  printf '%s\n' "$p"
+# Find the fd executable. On Debian/Ubuntu it may be installed as fdfind.
+find_fd() {
+  if command -v fd >/dev/null 2>&1; then
+    printf '%s\n' "fd"
+  elif command -v fdfind >/dev/null 2>&1; then
+    printf '%s\n' "fdfind"
+  else
+    printf '%s\n' ""
+  fi
 }

@@ -36,7 +36,7 @@ run_fzf() {
       --height=100% \
       --reverse \
       --no-multi \
-      --preview 'ls -la --color=always {} 2>/dev/null | head -50'
+      --preview 'ls -la --color=always "{}" 2>/dev/null | head -50'
 }
 
 # Initial load: picker-stream.sh with empty query, piped into fzf.

@@ -35,7 +35,9 @@ active_id=$(active_pane_id)
 sent=0
 skipped=0
 
-for pid in $(active_pane_ids); do
+active_pane_ids | while IFS= read -r pid; do
+  [ -n "$pid" ] || continue
+
   if [ "$pid" != "$active_id" ] || [ "$include_active" = "1" ]; then
     : # keep going
   else
