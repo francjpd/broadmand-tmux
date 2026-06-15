@@ -23,12 +23,16 @@ if [ "${1:-}" = "--print" ]; then
   exit 0
 fi
 
+# Where fd should start from. Pass as $1 from cd-all.sh, else default to $HOME.
+_fd_root="${1:-$HOME}"
+
 # Build the input stream based on engine choice.
+# Paths are always absolute (we prepend the root) so cd-all.sh doesn't need to resolve.
 build_stream_fd() {
   if command -v fd >/dev/null 2>&1; then
-    fd --type=d --hidden --follow --exclude .git 2>/dev/null
+    fd --type=d --hidden --follow --exclude .git --base-directory "$_fd_root" . "$_fd_root" 2>/dev/null
   else
-    find . -type d -not -path '*/.git*' 2>/dev/null
+    find "$_fd_root" -type d -not -path '*/.git*' 2>/dev/null
   fi
 }
 

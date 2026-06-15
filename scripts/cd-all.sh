@@ -29,16 +29,9 @@ if [ "$mode" = "picker" ]; then
   tmux display-popup \
     -E -w 60% -h 40% \
     -T "pick directory" \
-    "bash '$SCRIPT_DIR/picker.sh' > '$_out'" || true
+    "bash '$SCRIPT_DIR/picker.sh' $(shell_quote "$active_cwd") > '$_out'" || true
   target=$(cat "$_out" 2>/dev/null || true)
   [ -z "$target" ] && { tmux display-message "cd-all: cancelled"; exit 0; }
-  # Resolve relative picker path against the active pane's cwd.
-  target="${target#./}"
-  case "$target" in
-    /*) ;;                                      # already absolute
-    ~*) target="${target/#\~/$HOME}" ;;          # expand tilde
-    *)  target="$active_cwd/$target" ;;           # relative -> prepend pane cwd
-  esac
 else
   # Pre-fill with the parent directory so Tab browsing starts one level up.
   active_parent=$(dirname "$active_cwd")
