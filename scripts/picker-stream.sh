@@ -15,7 +15,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=util.sh
 . "$SCRIPT_DIR/util.sh"
 
-ENGINE=$(tmux_opt @broadcast-picker-engine 'fd')
+ENGINE=$(broadcast_picker_engine)
 query="${1:-}"
 root="${BROADCAST_FALLBACK_ROOT:-$HOME}"
 

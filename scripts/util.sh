@@ -2,6 +2,10 @@
 # scripts/util.sh — shared helpers for broadmand-tmux
 # Source this from sibling scripts. Not executable on its own.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../defaults.sh
+. "$SCRIPT_DIR/../defaults.sh"
+
 # Print an error to tmux status line and exit non-zero.
 die() {
   local msg="$1"
@@ -18,6 +22,27 @@ tmux_opt() {
   local val
   val=$(tmux show-options -gqv "$name" 2>/dev/null) || val=""
   printf '%s' "${val:-$default}"
+}
+
+# Option accessors using the centralized defaults from defaults.sh.
+broadcast_run_key() {
+  tmux_opt "$BROADCAST_RUN_KEY_OPTION" "$BROADCAST_RUN_KEY_DEFAULT"
+}
+
+broadcast_cd_picker_key() {
+  tmux_opt "$BROADCAST_CD_PICKER_KEY_OPTION" "$BROADCAST_CD_PICKER_KEY_DEFAULT"
+}
+
+broadcast_picker_engine() {
+  tmux_opt "$BROADCAST_PICKER_ENGINE_OPTION" "$BROADCAST_PICKER_ENGINE_DEFAULT"
+}
+
+broadcast_excluded() {
+  tmux_opt "$BROADCAST_EXCLUDED_OPTION" "$BROADCAST_EXCLUDED_DEFAULT"
+}
+
+broadcast_pane_delay() {
+  tmux_opt "$BROADCAST_PANE_DELAY_OPTION" "$BROADCAST_PANE_DELAY_DEFAULT"
 }
 
 # Get all pane IDs in the active window, one per line.

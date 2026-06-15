@@ -27,8 +27,8 @@ for a in "$@"; do
   esac
 done
 
-EXCLUDED=$(tmux_opt @broadcast-excluded 'vim,vi,nvim,less,man,ssh,htop,top,mc,opencode,claude,aider,continue,qwen,qwen-cli,gemini,gemini-cli,openai,ollama,copilot,codeium,anthropic,chatgpt,chatgpt-cli,sgpt,aichat,pplx,perplexity')
-PANE_DELAY_MS=$(tmux_opt @broadcast-pane-delay '5')
+EXCLUDED=$(broadcast_excluded)
+PANE_DELAY_MS=$(broadcast_pane_delay)
 export PANE_DELAY_MS
 
 active_id=$(active_pane_id)

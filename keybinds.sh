@@ -6,11 +6,14 @@
 
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-_run_key=$(tmux show-options -gqv @broadcast-run-key 2>/dev/null)
-_run_key="${_run_key:-d}"
+# shellcheck source=defaults.sh
+. "$PLUGIN_DIR/defaults.sh"
 
-_picker_key=$(tmux show-options -gqv @broadcast-cd-picker-key 2>/dev/null)
-_picker_key="${_picker_key:-D}"
+_run_key=$(tmux show-options -gqv "$BROADCAST_RUN_KEY_OPTION")
+_run_key="${_run_key:-$BROADCAST_RUN_KEY_DEFAULT}"
+
+_picker_key=$(tmux show-options -gqv "$BROADCAST_CD_PICKER_KEY_OPTION")
+_picker_key="${_picker_key:-$BROADCAST_CD_PICKER_KEY_DEFAULT}"
 
 # Unbind first so the user can override after the plugin loads.
 tmux unbind-key -T prefix "$_run_key"    2>/dev/null || true
