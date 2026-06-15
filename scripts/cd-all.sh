@@ -20,20 +20,24 @@ esac
 
 active_cwd=$(tmux display-message -p '#{pane_current_path}')
 
+# display-popup -E propagates exit status but NOT stdout.
+# Use a temp file to capture the popup's output.
+_out=$(mktemp /tmp/broadcast-cd.XXXXXX) || die "failed to create temp file"
+trap "rm -f '$_out'" EXIT
+
 if [ "$mode" = "picker" ]; then
-  # Single popup: open fzf, user picks a path, immediately broadcast.
-  picked=$(tmux display-popup \
+  tmux display-popup \
     -E -w 60% -h 40% \
     -T "pick directory" \
-    "bash '$SCRIPT_DIR/picker.sh'") || true
-  [ -z "$picked" ] && { tmux display-message "cd-all: cancelled"; exit 0; }
-  target="$picked"
+    "bash '$SCRIPT_DIR/picker.sh' > '$_out'" || true
+  target=$(cat "$_out" 2>/dev/null || true)
+  [ -z "$target" ] && { tmux display-message "cd-all: cancelled"; exit 0; }
 else
-  # Freeform popup with read -e -i and Tab-completion.
-  chosen=$(tmux display-popup \
+  tmux display-popup \
     -E -w 40% -h 10% \
     -T "cd all panes" \
-    "bash '$SCRIPT_DIR/popup.sh' $(printf '%q' "$active_cwd")") || true
+    "bash '$SCRIPT_DIR/popup.sh' $(shell_quote "$active_cwd") > '$_out'" || true
+  chosen=$(cat "$_out" 2>/dev/null || true)
   [ -z "$chosen" ] && { tmux display-message "cd-all: cancelled"; exit 0; }
   # Expand leading ~ but leave relative paths as-is (each pane resolves them).
   target="${chosen/#\~/$HOME}"
