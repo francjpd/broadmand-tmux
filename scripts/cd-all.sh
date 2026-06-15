@@ -32,6 +32,13 @@ if [ "$mode" = "picker" ]; then
     "bash '$SCRIPT_DIR/picker.sh' > '$_out'" || true
   target=$(cat "$_out" 2>/dev/null || true)
   [ -z "$target" ] && { tmux display-message "cd-all: cancelled"; exit 0; }
+  # Resolve relative picker path against the active pane's cwd.
+  target="${target#./}"
+  case "$target" in
+    /*) ;;                                      # already absolute
+    ~*) target="${target/#\~/$HOME}" ;;          # expand tilde
+    *)  target="$active_cwd/$target" ;;           # relative -> prepend pane cwd
+  esac
 else
   tmux display-popup \
     -E -w 40% -h 10% \
