@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# keybinds.sh — emit the keybinds. Run via `run-shell` from broadcast.tmux.
+# keybinds.sh — emit the keybinds. Run via `run-shell` from broadmand.tmux.
 # Users can override by re-binding in their own tmux.conf after the plugin loads.
 # (Note: this script is invoked as a subshell via `run-shell`, so all tmux
 # commands are prefixed with `tmux` explicitly.)

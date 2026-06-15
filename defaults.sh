@@ -1,5 +1,5 @@
 # defaults.sh — resolve @broadcast-* options with safe fallbacks for broadmand-tmux.
-# Source this from broadcast.tmux.
+# Source this from broadmand.tmux.
 
 _broadmand__resolve() {
   local name="$1" default="$2"

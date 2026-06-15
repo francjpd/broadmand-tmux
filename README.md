@@ -92,7 +92,7 @@ Add this to your `tmux.conf` and reload with `prefix r`:
 ```tmux
 set -g @broadcast-run-key       'd'
 set -g @broadcast-cd-picker-key 'D'
-run-shell '~/.tmux/plugins/broadmand-tmux/broadcast.tmux'
+run-shell '~/.tmux/plugins/broadmand-tmux/broadmand.tmux'
 ```
 
 ## Configuration

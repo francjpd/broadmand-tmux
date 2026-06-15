@@ -5,7 +5,7 @@
 #   run '~/.tmux/plugins/tpm/tpm'
 #
 # Manual install:
-#   run-shell "~/.tmux/plugins/broadmand-tmux/broadcast.tmux"
+#   run-shell "~/.tmux/plugins/broadmand-tmux/broadmand.tmux"
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 
