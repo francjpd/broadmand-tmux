@@ -1,7 +1,7 @@
-# defaults.sh — resolve @broadcast-* options with safe fallbacks.
+# defaults.sh — resolve @broadcast-* options with safe fallbacks for broadmand-tmux.
 # Source this from broadcast.tmux.
 
-_broadcast__resolve() {
+_broadmand__resolve() {
   local name="$1" default="$2"
   local val
   val=$(tmux show-options -gqv "$name" 2>/dev/null) || val=""
@@ -14,6 +14,6 @@ _broadcast__resolve() {
 
 # Optional: a quick sanity check that tmux is running.
 command -v tmux >/dev/null 2>&1 || {
-  printf 'broadcast-tmux: tmux not found in PATH\n' >&2
+  printf 'broadmand-tmux: tmux not found in PATH\n' >&2
   return 1 2>/dev/null || exit 1
 }

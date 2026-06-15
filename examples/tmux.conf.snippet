@@ -1,19 +1,19 @@
-# broadcast-tmux — install snippet
+# broadmand-tmux — install snippet
 # Drop into your ~/.config/tmux/tmux.conf
 
 # 1. Install (TPM, recommended):
-#    set -g @plugin 'you/broadcast-tmux'
-#    set -g @tpm-install 'y'
-#    run-shell -b '~/.tmux/plugins/tpm/tpm'
+#    set -g @plugin 'tmux-plugins/tpm'
+#    set -g @plugin 'francjpd/broadmand-tmux'
+#    run '~/.tmux/plugins/tpm/tpm'
 #
 # 2. Or install manually:
-#    git clone https://github.com/you/broadcast-tmux \
-#      ~/.tmux/plugins/broadcast-tmux
+#    git clone git@github.com:francjpd/broadmand-tmux.git \
+#      ~/.tmux/plugins/broadmand-tmux
 
-# ----- broadcast-tmux configuration -----
+# ----- broadmand-tmux configuration -----
 
 # Keybinds
-set -g @broadcast-cd-key        'd'
+set -g @broadcast-run-key       'd'
 set -g @broadcast-cd-picker-key 'D'
 
 # Picker backend: fd | zoxide | both
@@ -27,6 +27,6 @@ set -g @broadcast-excluded 'vim,vi,nvim,less,man,ssh,htop,top,mc'
 set -g @broadcast-pane-delay '5'
 
 # Load the plugin (TPM or manual install path)
-if-shell -b '[ -d ~/.tmux/plugins/broadcast-tmux ]' {
-  run-shell '~/.tmux/plugins/broadcast-tmux/broadcast.tmux'
+if-shell -b '[ -d ~/.tmux/plugins/broadmand-tmux ]' {
+  run-shell '~/.tmux/plugins/broadmand-tmux/broadcast.tmux'
 }

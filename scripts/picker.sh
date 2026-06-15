@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/picker.sh — choose a directory using fzf.
+# scripts/picker.sh — choose a directory using fzf. Part of broadmand-tmux.
 #
 # Usage:
 #   picker.sh [active_cwd]

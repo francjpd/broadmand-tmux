@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # scripts/popup.sh — reusable single-line input modal with Tab completion.
+# Part of broadmand-tmux.
 #
 # Usage (inside a tmux display-popup -E):
 #   popup.sh "<default>"

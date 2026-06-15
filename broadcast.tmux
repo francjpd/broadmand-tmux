@@ -1,8 +1,11 @@
-# broadcast.tmux — entrypoint sourced from the user's tmux.conf.
+# broadmand-tmux — entrypoint sourced from the user's tmux.conf.
 #
-# Add this to your tmux.conf:
-#   set -g @plugin 'you/broadcast-tmux'
-#   run-shell "~/.tmux/plugins/broadcast-tmux/broadcast.tmux"
+# TPM install:
+#   set -g @plugin 'francjpd/broadmand-tmux'
+#   run '~/.tmux/plugins/tpm/tpm'
+#
+# Manual install:
+#   run-shell "~/.tmux/plugins/broadmand-tmux/broadcast.tmux"
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 

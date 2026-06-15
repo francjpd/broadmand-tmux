@@ -1,5 +1,5 @@
-# broadcast-tmux plugin directory (path used for sourcing)
-.broadcast-tmux-path
+# broadmand-tmux plugin directory (path used for sourcing)
+.broadmand-tmux-path
 
 # OS / editor cruft
 .DS_Store
@@ -9,4 +9,4 @@ Thumbs.db
 *~
 
 # Test artifacts
-/tmp/broadcast-tmux.*
+/tmp/broadmand-tmux.*

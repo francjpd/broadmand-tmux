@@ -2,8 +2,8 @@
 # scripts/cd-all.sh — broadcast `cd <path>` to every pane in the active window.
 #
 # Usage:
-#   cd-all.sh freeform   # popup with Tab-completable input, pre-filled with cwd
 #   cd-all.sh picker     # fzf directory picker → broadcast directly
+#   cd-all.sh freeform   # popup with Tab-completable input, pre-filled with cwd
 #   cd-all.sh            # default: freeform
 
 set -euo pipefail

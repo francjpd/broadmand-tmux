@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/util.sh — shared helpers for broadcast-tmux
+# scripts/util.sh — shared helpers for broadmand-tmux
 # Source this from sibling scripts. Not executable on its own.
 
 # Resolve plugin install directory from the path of the calling script.
@@ -15,7 +15,7 @@ die() {
     tmux display-message "broadcast-tmux: $msg"
   command -v tmux >/dev/null 2>&1 && [ -z "${TMUX:-}" ] && \
     tmux display-message "broadcast-tmux: $msg"
-  printf 'broadcast-tmux: %s\n' "$msg" >&2
+  printf 'broadmand-tmux: %s\n' "$msg" >&2
   exit 1
 }
 

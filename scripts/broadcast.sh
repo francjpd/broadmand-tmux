@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # scripts/broadcast.sh — run a shell line in every pane of the active window.
+# Part of broadmand-tmux.
 #
 # Usage:
 #   broadcast.sh "<shell-line>" [--include-active] [--dry-run]
