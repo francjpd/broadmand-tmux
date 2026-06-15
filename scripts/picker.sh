@@ -1,16 +1,13 @@
 #!/usr/bin/env bash
-# scripts/picker.sh — choose a directory using fzf with dynamic loading.
+# scripts/picker.sh — choose a directory using fzf.
 #
 # Usage:
 #   picker.sh [active_cwd]
 #   picker.sh --print
 #
-# Initial load: zoxide frecent (most-used) paths; falls back to
-# active_cwd contents via fd if zoxide is not installed.
-#
-# Dynamic load: fzf's change:reload binding re-runs picker-stream.sh
-# on every keystroke. Empty query -> initial list. Non-empty query
-# -> the typed path itself + its subdirectories.
+# Loads the directory list once via picker-stream.sh (zoxide frecent or
+# active_cwd contents via fd) and lets fzf fuzzy-filter the list as the
+# user types.
 #
 # Returns 0 with empty stdout if user cancels (Esc in fzf).
 
@@ -20,7 +17,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=util.sh
 . "$SCRIPT_DIR/util.sh"
 
-ENGINE=$(tmux_opt @broadcast-picker-engine 'zoxide')
+ENGINE=$(tmux_opt @broadcast-picker-engine 'fd')
 
 if [ "${1:-}" = "--print" ]; then
   printf 'engine=%s\n' "$ENGINE"
@@ -39,7 +36,6 @@ run_fzf() {
       --height=100% \
       --reverse \
       --no-multi \
-      --bind "change:reload(bash $SCRIPT_DIR/picker-stream.sh \"{q}\" 2>/dev/null || true)" \
       --preview 'ls -la --color=always {} 2>/dev/null | head -50'
 }
 
