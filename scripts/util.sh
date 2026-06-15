@@ -68,9 +68,15 @@ pane_excluded() {
   echo no
 }
 
-# Quote a string for safe inclusion as a single shell argument.
+# Quote a string using single-quote escaping.
+# Each embedded single-quote is replaced with '\''  (end literal, add quote, resume literal).
+# The whole string is wrapped in single quotes so the shell preserves spaces/special chars.
+# This is compatible with zoxide, zsh, and bash.
 shell_quote() {
-  printf %q "$1"
+  local s="$1"
+  # Escape embedded single quotes: '  →  '\''
+  s=${s//\'/\'\\\'\'}
+  printf "'%s'" "$s"
 }
 
 # Send a literal line to a pane, clearing any half-typed input first.
