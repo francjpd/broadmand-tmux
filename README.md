@@ -6,13 +6,13 @@ with a modal-style `cd` picker and a free-form command broadcaster.
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │                                                              │
-│   prefix d →  ┌── broadcast command ────────────────┐         │
+│   prefix d →   ┌── broadcast command ──────────────┐         │
 │                │                                   │         │
-│                │  > make test                       │         │
+│                │  > make test                      │         │
 │                │                                   │         │
 │                └───────────────────────────────────┘         │
 │                                                              │
-│   prefix D →  ┌── pick directory ──────────────────┐         │
+│   prefix D →   ┌── pick directory ─────────────────┐         │
 │                │   .config/                        │         │
 │                │   projects/                       │         │
 │                │   Documents/                      │         │
