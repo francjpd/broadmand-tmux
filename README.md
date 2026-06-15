@@ -122,52 +122,6 @@ drop-in config block.
 5. A short summary is printed to stderr, which `tmux run-shell` displays
    in the status line without cluttering the active pane.
 
-## Project layout
-
-```
-broadmand-tmux/
-  broadcast.tmux         # entrypoint; source from your tmux.conf
-  defaults.sh            # @-option fallbacks
-  keybinds.sh            # all `bind` lines (override after sourcing)
-  scripts/
-    util.sh              # shared helpers
-    popup.sh             # the reusable input modal primitive
-    picker.sh            # fzf-backed directory picker
-    picker-stream.sh     # directory stream for the picker
-    broadcast.sh         # the engine
-    run-all.sh           # free-form command broadcast feature
-    cd-all.sh            # the cd picker feature
-  examples/
-    tmux.conf.snippet    # drop-in install block
-  README.md
-  LICENSE
-```
-
-## Testing in isolation
-
-```sh
-# Engine dry-run (prints what it would send, sends nothing):
-bash scripts/broadcast.sh "cd /tmp" --dry-run
-
-# Picker engine discovery:
-bash scripts/picker.sh --print
-
-# Popup (interactive; requires a real terminal):
-tmux display-popup -E -w 60% -h 20% \
-  -T "test" "bash scripts/popup.sh '/tmp'"
-
-# cd-all end-to-end:
-prefix D
-# (pick or type a path, press Enter)
-```
-
-## Future features
-
-Built on the same `popup.sh` + `broadcast.sh` primitives:
-
-- Broadcast environment variables: `prefix E` → `NAME=VALUE` → sent as `export NAME=VALUE` to each pane.
-- Per-window sync: optionally include other windows in the current session.
-
 ## License
 
 MIT.
