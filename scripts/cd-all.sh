@@ -45,7 +45,9 @@ fi
 
 # Build the shell line, safely quoted.
 quoted=$(shell_quote "$target")
-line="cd $quoted"
+# Use 'command cd' to bypass zoxide and other cd hooks
+# so the exact path is always used, not a fuzzy match.
+line="command cd $quoted"
 
 # Broadcast to ALL panes including the active one.
 bash "$SCRIPT_DIR/broadcast.sh" "$line" --include-active
