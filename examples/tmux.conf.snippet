@@ -17,6 +17,7 @@ set -g @broadcast-cd-key        'd'
 set -g @broadcast-cd-picker-key 'D'
 
 # Picker backend: fd | zoxide | both
+# fd requires `fd`, zoxide requires `zoxide`, both prefers zoxide then fd.
 set -g @broadcast-picker-engine 'fd'
 
 # Comma-separated list of pane commands to never touch
@@ -24,10 +25,6 @@ set -g @broadcast-excluded 'vim,vi,nvim,less,man,ssh,htop,top,mc'
 
 # Throttle (ms) between send-keys operations per pane
 set -g @broadcast-pane-delay '5'
-
-# Popup geometry
-set -g @broadcast-popup-width  '80%'
-set -g @broadcast-popup-height '30%'
 
 # Load the plugin (TPM or manual install path)
 if-shell -b '[ -d ~/.tmux/plugins/broadcast-tmux ]' {

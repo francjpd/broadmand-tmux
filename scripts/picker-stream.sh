@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/picker-stream.sh — dynamic stream for fzf's change:reload.
+# scripts/picker-stream.sh — directory stream for picker.sh.
 #
 # Usage:
 #   picker-stream.sh [query]
@@ -15,7 +15,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=util.sh
 . "$SCRIPT_DIR/util.sh"
 
-ENGINE=$(tmux_opt @broadcast-picker-engine 'zoxide')
+ENGINE=$(tmux_opt @broadcast-picker-engine 'fd')
 query="${1:-}"
 root="${BROADCAST_FALLBACK_ROOT:-$HOME}"
 

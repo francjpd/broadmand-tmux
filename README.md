@@ -24,11 +24,25 @@ once.
 └──────────────────────────────────────────────────────────────┘
 ```
 
+## Quick start
+
+- **`prefix d`** — change directory in every pane of the current window.
+  A popup opens pre-filled with the active pane's current directory.
+  Type a path, press `Enter`, and every eligible pane runs `cd <path>`.
+
+- **`prefix D`** — pick a directory with `fzf`, then broadcast it the
+  same way. The list is loaded once from `fd` or `zoxide` and filtered
+  as you type.
+
+Panes running excluded commands (editors, `ssh`, `htop`, …) or currently
+in copy mode are skipped automatically. A short status message flashes
+in the tmux status line when the broadcast finishes.
+
 ## Features
 
 - **`cd-all`** — broadcast `cd <path>` to every pane in the active window.
   - Free-form: `prefix d` opens an input pre-filled with the active pane's cwd.
-  - Picker: `prefix D` opens fzf first, then a confirm popup pre-filled with the pick.
+  - Picker: `prefix D` opens an `fzf` directory picker and broadcasts the pick.
 - **Reusable modal primitive** — `scripts/popup.sh` is a generic single-line
   input box; future features (env vars, "run command in all panes", etc.)
   build on it.
@@ -36,6 +50,14 @@ once.
 - **Safe by default** — skips panes running editors (`vim`, `vi`, `nvim`,
   `less`, `man`, `mc`), `ssh`, system monitors (`htop`, `top`), and panes
   currently in copy mode. The list is configurable.
+
+## Requirements
+
+- tmux
+- bash
+- `fzf` (used by the directory picker)
+- `fd` or `zoxide` (picker engine; install the one matching
+  `@broadcast-picker-engine`)
 
 ## Install (TPM)
 
@@ -58,7 +80,7 @@ git clone https://github.com/you/broadcast-tmux \
 ```
 
 Add the `run-shell` line above to your `tmux.conf` and reload with
-`prefix q`.
+`prefix r`.
 
 ## Configuration
 
@@ -69,18 +91,21 @@ Add the `run-shell` line above to your `tmux.conf` and reload with
 | `@broadcast-picker-engine`      | `fd`                                             | `fd`, `zoxide`, or `both`                    |
 | `@broadcast-excluded`           | `vim,vi,nvim,less,man,ssh,htop,top,mc`           | Comma-separated commands to skip             |
 | `@broadcast-pane-delay`         | `5`                                              | Milliseconds between `send-keys` ops         |
-| `@broadcast-popup-width`        | `80%`                                            | Popup width                                  |
-| `@broadcast-popup-height`       | `30%`                                            | Popup height                                 |
+
+See [`examples/tmux.conf.snippet`](examples/tmux.conf.snippet) for a
+drop-in config block.
 
 ## How it works
 
 1. `cd-all.sh` opens a tmux popup via `display-popup -E`, capturing stdout.
 2. Inside the popup, `popup.sh` (the primitive) runs `read -e` to gather input.
-3. On submit, `cd-all.sh` resolves `~`/relative paths, validates the directory,
-   and invokes `broadcast.sh "cd <path>"`.
+3. On submit, `cd-all.sh` expands a leading `~` and invokes
+   `broadcast.sh "cd <path>"`.
 4. `broadcast.sh` walks all panes in the active window, skipping excluded
    commands and panes in copy mode, and sends `C-u` + literal `cd …` +
    `Enter` to each.
+5. A short summary is printed to stderr, which `tmux run-shell` displays
+   in the status line without cluttering the active pane.
 
 ## Project layout
 
@@ -93,6 +118,7 @@ broadcast-tmux/
     util.sh              # shared helpers
     popup.sh             # the reusable input modal primitive
     picker.sh            # fzf-backed directory picker
+    picker-stream.sh     # directory stream for the picker
     broadcast.sh         # the engine
     cd-all.sh            # the user-facing feature
   examples/
@@ -112,7 +138,7 @@ bash scripts/picker.sh --print
 
 # Popup (interactive; requires a real terminal):
 tmux display-popup -E -w 60% -h 20% \
-  -T "test" "bash scripts/popup.sh 'title' '/tmp'"
+  -T "test" "bash scripts/popup.sh '/tmp'"
 
 # cd-all end-to-end:
 prefix d
