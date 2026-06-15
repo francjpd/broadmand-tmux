@@ -6,20 +6,21 @@
 #   popup.sh "<default>"
 #
 # Prints the chosen value to stdout.
-# Exits 0 with empty stdout if cancelled (Esc), non-zero on read error.
+# Exits 0 with empty stdout if cancelled (Esc or Ctrl-C), non-zero on read error.
 #
 # Keys:
 #   Enter  — submit
-#   Esc    — cancel
+#   Esc    — cancel (clears any default/input and closes the modal)
 #   Tab    — file-name completion
 
 set -euo pipefail
 
 default="${1:-}"
 
-# Map Esc to exit cleanly. bind only affects readline within this script.
-# Accept-line already submits; aborting on Esc gives a 0 exit with empty output.
-bind '"\e": abort' 2>/dev/null || true
+# Make Esc clear the line and send EOF, so read -e exits with empty output.
+# Ctrl-C is also bound to abort cleanly.
+bind '"\e": "\C-a\C-k\C-d"' 2>/dev/null || true
+bind '"\C-c": abort' 2>/dev/null || true
 
 # read -e enables readline with Tab completion (filename completion by default).
 # -i "$default" pre-seeds the edit buffer so the user sees it and can edit.
@@ -27,7 +28,7 @@ bind '"\e": abort' 2>/dev/null || true
 if IFS= read -r -e -i "$default" -p '> ' ans; then
   printf '%s\n' "$ans"
 else
-  # Esc or EOF: print nothing and exit 0 so the caller sees an empty result.
+  # Esc, Ctrl-C, or EOF: print nothing and exit 0 so the caller treats it as cancel.
   printf ''
   exit 0
 fi
