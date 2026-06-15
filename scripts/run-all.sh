@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # scripts/run-all.sh — broadcast a free-form shell command to every pane
-# in the active window except the active one.
+# in the active window.
 #
 # Usage:
 #   run-all.sh
 #
 # Opens an empty single-line popup, then broadcasts the typed command
-# via broadcast.sh (active pane is skipped).
+# via broadcast.sh to all panes in the active window.
 
 set -euo pipefail
 
@@ -27,4 +27,4 @@ tmux display-popup \
 command=$(cat "$_out" 2>/dev/null || true)
 [ -z "$command" ] && { tmux display-message "run-all: cancelled"; exit 0; }
 
-bash "$SCRIPT_DIR/broadcast.sh" "$command"
+bash "$SCRIPT_DIR/broadcast.sh" "$command" --include-active

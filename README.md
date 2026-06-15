@@ -25,8 +25,8 @@ with a modal-style `cd` picker and a free-form command broadcaster.
 
 ## Quick start
 
-- **`prefix d`** — broadcast a free-form shell command to every eligible
-  pane in the current window (the active pane is skipped).
+- **`prefix d`** — broadcast a free-form shell command to every pane
+  in the current window (including the active one).
   Type a command, press `Enter`, and each pane receives it.
 
 - **`prefix D`** — pick a directory with `fzf`, then broadcast
@@ -40,7 +40,7 @@ in the tmux status line when the broadcast finishes.
 ## Features
 
 - **Broadcast any command** — `prefix d` opens an empty input; the typed
-  command is sent to every pane except the active one.
+  command is sent to every pane in the active window.
 - **`cd-all` picker** — `prefix D` opens an `fzf` directory picker and
   broadcasts `cd <dir>` to all panes including the active one.
 - **Reusable modal primitive** — `scripts/popup.sh` is a generic single-line
