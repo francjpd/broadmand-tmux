@@ -1,0 +1,12 @@
+# broadcast-tmux plugin directory (path used for sourcing)
+.broadcast-tmux-path
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Test artifacts
+/tmp/broadcast-tmux.*

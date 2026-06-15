@@ -1,0 +1,35 @@
+# broadcast-tmux — install snippet
+# Drop into your ~/.config/tmux/tmux.conf
+
+# 1. Install (TPM, recommended):
+#    set -g @plugin 'you/broadcast-tmux'
+#    set -g @tpm-install 'y'
+#    run-shell -b '~/.tmux/plugins/tpm/tpm'
+#
+# 2. Or install manually:
+#    git clone https://github.com/you/broadcast-tmux \
+#      ~/.tmux/plugins/broadcast-tmux
+
+# ----- broadcast-tmux configuration -----
+
+# Keybinds
+set -g @broadcast-cd-key        'd'
+set -g @broadcast-cd-picker-key 'D'
+
+# Picker backend: fd | zoxide | both
+set -g @broadcast-picker-engine 'fd'
+
+# Comma-separated list of pane commands to never touch
+set -g @broadcast-excluded 'vim,vi,nvim,less,man,ssh,htop,top,mc'
+
+# Throttle (ms) between send-keys operations per pane
+set -g @broadcast-pane-delay '5'
+
+# Popup geometry
+set -g @broadcast-popup-width  '80%'
+set -g @broadcast-popup-height '30%'
+
+# Load the plugin (TPM or manual install path)
+if-shell -b '[ -d ~/.tmux/plugins/broadcast-tmux ]' {
+  run-shell '~/.tmux/plugins/broadcast-tmux/broadcast.tmux'
+}
