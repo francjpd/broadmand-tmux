@@ -40,10 +40,13 @@ if [ "$mode" = "picker" ]; then
     *)  target="$active_cwd/$target" ;;           # relative -> prepend pane cwd
   esac
 else
+  # Pre-fill with the parent directory so Tab browsing starts one level up.
+  active_parent=$(dirname "$active_cwd")
+  [ "$active_parent" = "/" ] || active_parent="$active_parent/"
   tmux display-popup \
     -E -w 40% -h 10% \
     -T "cd all panes" \
-    "bash '$SCRIPT_DIR/popup.sh' $(shell_quote "$active_cwd") > '$_out'" || true
+    "bash '$SCRIPT_DIR/popup.sh' $(shell_quote "$active_parent") > '$_out'" || true
   chosen=$(cat "$_out" 2>/dev/null || true)
   [ -z "$chosen" ] && { tmux display-message "cd-all: cancelled"; exit 0; }
   # Expand leading ~ but leave relative paths as-is (each pane resolves them).
