@@ -12,9 +12,9 @@ _broadcast__plugin_dir() {
 die() {
   local msg="$1"
   command -v tmux >/dev/null 2>&1 && [ -n "${TMUX:-}" ] && \
-    tmux display-message "broadcast-tmux: $msg"
+    tmux display-message "broadmand-tmux: $msg"
   command -v tmux >/dev/null 2>&1 && [ -z "${TMUX:-}" ] && \
-    tmux display-message "broadcast-tmux: $msg"
+    tmux display-message "broadmand-tmux: $msg"
   printf 'broadmand-tmux: %s\n' "$msg" >&2
   exit 1
 }
