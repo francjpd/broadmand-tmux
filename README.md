@@ -1,5 +1,7 @@
 # broadmand-tmux
 
+![broadmand-tmux logo](broadmand.png)
+
 Broadcast a shell command to every pane of the active tmux window. Ships
 with a modal-style `cd` picker and a free-form command broadcaster.
 
