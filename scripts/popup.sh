@@ -24,11 +24,21 @@ bind '"\C-c": abort' 2>/dev/null || true
 
 # read -e enables readline with Tab completion (filename completion by default).
 # -i "$default" pre-seeds the edit buffer so the user sees it and can edit.
+# macOS ships bash 3.2, whose read builtin does not support -i; using it
+# there makes the popup exit immediately. Omit -i on bash < 4.
 # -p writes the prompt to stderr (visible in the popup terminal).
-if IFS= read -r -e -i "$default" -p '> ' ans; then
-  printf '%s\n' "$ans"
+if [ "${BASH_VERSINFO[0]:-0}" -ge 4 ]; then
+  if IFS= read -r -e -i "$default" -p '> ' ans; then
+    printf '%s\n' "$ans"
+  else
+    printf ''
+    exit 0
+  fi
 else
-  # Esc, Ctrl-C, or EOF: print nothing and exit 0 so the caller treats it as cancel.
-  printf ''
-  exit 0
+  if IFS= read -r -e -p '> ' ans; then
+    printf '%s\n' "$ans"
+  else
+    printf ''
+    exit 0
+  fi
 fi
