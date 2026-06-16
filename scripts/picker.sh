@@ -5,9 +5,9 @@
 #   picker.sh [active_cwd]
 #   picker.sh --print
 #
-# Loads the directory list once via picker-stream.sh (zoxide frecent or
-# active_cwd contents via fd) and lets fzf fuzzy-filter the list as the
-# user types.
+# Loads the directory list via picker-stream.sh. On open the stream
+# combines the active pane's cwd with $HOME. As soon as the user types,
+# picker-stream.sh is re-run with the typed text as the new root path.
 #
 # Returns 0 with empty stdout if user cancels (Esc in fzf).
 
@@ -36,6 +36,7 @@ run_fzf() {
       --height=100% \
       --reverse \
       --no-multi \
+      --bind "change:reload(bash '$SCRIPT_DIR/picker-stream.sh' \"{q}\" 2>/dev/null || true)" \
       --preview 'ls -la --color=always "{}" 2>/dev/null | head -50'
 }
 

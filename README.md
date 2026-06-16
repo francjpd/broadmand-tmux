@@ -31,7 +31,10 @@ with a modal-style `cd` picker and a free-form command broadcaster.
 
 - **`prefix D`** — pick a directory with `fzf`, then broadcast
   `cd <picked-directory>` to every pane (including the active one).
-  The list is loaded once from `fd` or `zoxide` and filtered as you type.
+  The initial list combines the active pane's cwd with `$HOME`, so the
+  picker is useful from anywhere. Type to fuzzy-filter that list. If
+  the typed text is an existing directory path, the list switches to
+  that directory plus its subdirectories.
 
 Panes running excluded commands (editors, `ssh`, `htop`, …) or currently
 in copy mode are skipped automatically. A short status message flashes
