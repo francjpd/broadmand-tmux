@@ -81,7 +81,7 @@ pane_excluded() {
   for x in $excluded; do
     x="${x#${x%%[![:space:]]*}}"   # trim leading whitespace
     x="${x%${x##*[![:space:]]}}"  # trim trailing whitespace
-    [ "$x" = "$cmd" ] && { echo yes; return; }
+    [ "$x" = "$cmd" ] || [ "$x" = "${cmd%%.*}" ] && { echo yes; return; }
   done
   echo no
 }
