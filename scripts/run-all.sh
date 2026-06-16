@@ -19,10 +19,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 _out=$(mktemp /tmp/broadmand-run.XXXXXX) || die "failed to create temp file"
 trap "rm -f '$_out'" EXIT
 
+# Run the popup from the active pane's cwd so Tab completion resolves
+# relative paths the same way the user's shell would.
+active_cwd=$(tmux display-message -p '#{pane_current_path}')
+
 tmux display-popup \
   -E -w 60% -h 15% \
   -T "broadcast command" \
-  "bash '$SCRIPT_DIR/popup.sh' '' > '$_out'" || true
+  "bash '$SCRIPT_DIR/popup.sh' '' $(shell_quote "$active_cwd") > '$_out'" || true
 
 command=$(cat "$_out" 2>/dev/null || true)
 [ -z "$command" ] && { tmux display-message "run-all: cancelled"; exit 0; }

@@ -29,7 +29,10 @@ with a modal-style `cd` picker and a free-form command broadcaster.
 
 - **`prefix d`** — broadcast a free-form shell command to every pane
   in the current window (including the active one).
-  Type a command, press `Enter`, and each pane receives it.
+  Type a command, press `Enter`, and each pane receives it.  The popup
+  starts in the active pane's working directory, and `Tab` cycles
+  through file and directory completions like zsh `menu-complete`
+  (Shift-`Tab` cycles backward).
 
 - **`prefix D`** — pick a directory with `fzf`, then broadcast
   `cd <picked-directory>` to every pane (including the active one).
@@ -44,6 +47,11 @@ in the tmux status line when the broadcast finishes.
 
 ## Features
 
+- **Native Tab cycling in the command popup** — `prefix d` starts in the
+  active pane's working directory; `Tab` cycles through file and
+  directory completions (zsh-style `menu-complete`) and Shift-`Tab`
+  cycles backward. The full match list is shown when there's no common
+  prefix to insert.
 - **Broadcast any command** — `prefix d` opens an empty input; the typed
   command is sent to every pane in the active window.
 - **`cd-all` picker** — `prefix D` opens an `fzf` directory picker and
@@ -116,8 +124,11 @@ drop-in config block.
 ## How it works
 
 1. `run-all.sh` / `cd-all.sh` opens a tmux popup via `display-popup -E`,
-   capturing stdout.
-2. Inside the popup, `popup.sh` (the primitive) runs `read -e` to gather input.
+   capturing stdout. `run-all.sh` launches the popup from the active
+   pane's cwd so that `Tab` completes relative paths as expected.
+2. Inside the popup, `popup.sh` (the primitive) runs `read -e` to gather
+   input, configured with a custom `INPUTRC` that enables zsh-style
+   `menu-complete` cycling and immediate list display.
 3. On submit, `cd-all.sh` expands a leading `~` and invokes
    `broadcast.sh "cd <path>"` while `run-all.sh` invokes
    `broadcast.sh "<command>"`.
