@@ -44,10 +44,16 @@ __normalize_path() {
   printf '%s' "$p"
 }
 
+# Maximum directory depth for fd scans. A value of 3 means the search
+# root plus two levels of subdirectories, which keeps the picker fast
+# on large home directories (notably macOS with deep Library trees).
+FD_MAX_DEPTH=3
+
 __fd_dirs() {
   local base="$1"
   if [ -n "$FD_CMD" ] && [ -d "$base" ]; then
     "$FD_CMD" --type=d --hidden --follow --exclude .git \
+      --max-depth "$FD_MAX_DEPTH" \
       --base-directory "$base" . "$base" 2>/dev/null
   fi
 }
